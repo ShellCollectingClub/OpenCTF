@@ -56,7 +56,7 @@ You can read more about the badness of Python pickle [here](https://blog.nelhage
 
 ## babys_first_rop
 
-# pwn
+### pwn
 
 This was a pretty simple ROP challenge. 
 
@@ -110,3 +110,15 @@ if __name__ == '__main__':
     p.interactive()
 ```
 
+
+## Forbidden Folly
+
+### level 1
+
+When navigating to the webpage, we get a `403 Forbidden` error.
+
+Knowing that this was a 50 point challenge, we knew the solution would be simple.
+
+One of the first things we did was to set the `X-Forwarded-For` header with the value of `127.0.0.1` (localhost), and tried the get request again.
+
+The flag was in an HTML comment.
