@@ -60,6 +60,25 @@ You can read more about the badness of Python pickle [here](https://blog.nelhage
 
 This was a pretty simple ROP challenge. 
 
+From main, the binary calls a function that loads a bunch of data into a place labeled `gadgets` then calls a function called `vuln`.
+
+This `vuln` function does a `read()` of 0x100 bytes into a buffer of size `0x50` creating an obvious overflow.
+
+The stack was not executable.
+
+The binary natively gave us a `pop rdi` gadget and a `pop rsi, r15` gadget.
+
+Our method was to call `read()` again on the section of memory called `gadgets` (since it was executable), and load some shellcode there, finally returning to it.
+
+The only thing we needed was a `pop rdx` gadget, which we were able to find using this:
+
+```gdb-peda$ ropsearch "pop rdx" 
+Searching for ROP gadget: 'pop rdx' in: binary ranges
+0x0060118f : (b'5ac3')    pop rdx; ret
+```
+
+our final exploit is below:
+
 ```from pwn import *
 
 #p = process(['./babys_first_rop'])
