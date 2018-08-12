@@ -128,8 +128,7 @@ The flag was in an HTML comment.
 
 The HTML page returned from level 1 was some type of monitoring console of servers. But this string was interesting:
 
-```#Tim placed a web terminal on the system for easy access, the location of that has been emailed to everyone who has access to this portal.
-```
+`Tim placed a web terminal on the system for easy access, the location of that has been emailed to everyone who has access to this portal.`
 
 Knowing that the domains listed in the monitoring panel were actual domains, we didn't try to attack those.
 
