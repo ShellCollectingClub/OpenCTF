@@ -122,3 +122,38 @@ Knowing that this was a 50 point challenge, we knew the solution would be simple
 One of the first things we did was to set the `X-Forwarded-For` header with the value of `127.0.0.1` (localhost), and tried the get request again.
 
 The flag was in an HTML comment.
+
+
+### level 2
+
+The HTML page returned from level 1 was some type of monitoring console of servers. But this string was interesting:
+
+```Tim placed a web terminal on the system for easy access, the location of that has been emailed to everyone who has access to this portal.
+```
+
+Knowing that the domains listed in the monitoring panel were actual domains, we didn't try to attack those.
+
+After spending way too much time analyzing the page, we decided to run, sigh, a brute force attack to enumerate some of the html paths on the server.
+
+After some time, one finally hit: `/debug`.
+
+When going there, there was an open directory listing with a file called `/debug/secret.txt`. This file contained the flag, and an email containing SSH creds for level 3.
+
+
+### level 3
+
+When sshing onto the server with the creds from level 2, we found a `secretpassword.zip` file in the home folder.
+
+This zipfile was password protected.
+
+We recovered the file, ran it though `zip2john` and finally `john the ripper`. After some time, the password was broken.
+
+The password? `poopstinks`. Nice.
+
+The contents of the zip file were jsut another password, presumably for another ssh user on the box. Listing the `/home/` directory, we saw a user named `hopper`.
+
+At this point, its important to note that our user, `chad`, was not a sudoer.
+
+When sshing onto the server with the user `hopper` and the password recovered from the zip, the first thing we tried was `sudo su`, and that worked. 
+
+The flag was in the `/root` directory.
